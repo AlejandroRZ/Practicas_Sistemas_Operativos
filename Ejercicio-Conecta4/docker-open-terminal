@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+ PROJECT=so-20241-gcc
+
+ docker image ls | grep $PROJECT --silent
+
+ if [ "$?" -ne 0 ]; then
+     docker build -t $PROJECT .
+ fi
+
+ docker run --volume $PWD:/app --workdir /app -it $PROJECT bash

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+TESTS_EXIT="exit"
+TESTS_EXEC="exec-once exec-arg exec-missing exec-multiple exec-bound"
+TESTS_WAIT="wait-simple wait-twice wait-bad-pid"
+TESTS_ROBUSTNESS="multi-recurse"
+
+TESTS_SYSCALLS_PROCESSES="$TESTS_EXIT $TESTS_EXEC $TESTS_WAIT $TESTS_ROBUSTNESS"
+
+bash ../execute-tests "userprog" "$TESTS_SYSCALLS_PROCESSES"

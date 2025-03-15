@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+TESTS_ALARM_CLOCK="alarm-single alarm-zero alarm-negative alarm-multiple alarm-simultaneous"
+
+bash ../execute-tests "threads" "$TESTS_ALARM_CLOCK"

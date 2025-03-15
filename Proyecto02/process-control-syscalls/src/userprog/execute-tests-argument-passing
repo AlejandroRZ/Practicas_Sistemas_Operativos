@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+TESTS_ARGUMENT_PASSING="args-none args-single args-multiple args-many args-dbl-space"
+
+bash ../execute-tests "userprog" "$TESTS_ARGUMENT_PASSING"

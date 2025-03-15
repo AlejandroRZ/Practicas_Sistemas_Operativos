@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+TESTS_PRIORITY_SCHEDULER="alarm-priority priority-change priority-preempt priority-fifo"
+# Para validar los puntos extra descomenta la siguiente linea
+# TESTS_PRIORITY_SCHEDULER="$TESTS_PRIORITY_SCHEDULER priority-sema priority-condvar"
+
+bash ../execute-tests "threads" "$TESTS_PRIORITY_SCHEDULER"

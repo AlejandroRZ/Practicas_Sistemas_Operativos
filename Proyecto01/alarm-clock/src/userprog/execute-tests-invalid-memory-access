@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+TESTS_SC="sc-bad-sp sc-bad-arg sc-boundary sc-boundary-2 sc-boundary-3"
+TESTS_BAD="bad-read bad-write bad-read2 bad-write2 bad-jump bad-jump2"
+TESTS_SYSCALLS="create-bad-ptr open-null open-bad-ptr create-null read-bad-ptr write-bad-ptr exec-bound-2 exec-bound-3 exec-bad-ptr wait-killed"
+
+TESTS="$TESTS_SC $TESTS_BAD $TESTS_SYSCALLS"
+
+TESTS_ROBUSTNESS="no-vm/multi-oom"
+TESTS="$TESTS $TESTS_ROBUSTNESS"
+
+bash ../execute-tests "userprog" "$TESTS"

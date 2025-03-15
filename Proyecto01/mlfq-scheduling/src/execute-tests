@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+if [ -z  "$2" ]
+then
+    echo "Missing Tests To Run Information"
+    exit -1
+fi
+
+MODULE=$1
+TESTS=$2
+
+# change to module directory in case we are not already there
+if [ "$MODULE" != "" ] && [ "$MODULE" != $(basename "$PWD") ]
+then
+    cd $MODULE
+fi
+
+make
+cd build
+
+TOTAL_TESTS=$(echo "$TESTS" | wc -w)
+TESTS_PASSED=0
+
+for test_name in $TESTS; do
+    FILENAME_BASE=""
+    if [ -z  "${MODULE}" ]
+    then
+        FILENAME_BASE="tests/${test_name}"
+    else
+        FILENAME_BASE="tests/${MODULE}/${test_name}"
+    fi
+    rm -f "$FILENAME_BASE.result" "$FILENAME_BASE.errors" "$FILENAME_BASE.output"
+    make $FILENAME_BASE.result
+    CURRENT_RESULT=$(cat $FILENAME_BASE.result)
+    if [ "${CURRENT_RESULT}" == "PASS" ] ;  then
+        TESTS_PASSED=$((TESTS_PASSED + 1))
+    fi
+done
+
+cd ..
+
+echo "SUMMARY ${TESTS_PASSED}/${TOTAL_TESTS} PASS"
+
+if [ "${TESTS_PASSED}" == "${TOTAL_TESTS}" ] ;  then
+    echo "TESTS SUCCEDED"
+    exit 0
+else
+    echo "TESTS FAILED"
+    exit -1
+fi

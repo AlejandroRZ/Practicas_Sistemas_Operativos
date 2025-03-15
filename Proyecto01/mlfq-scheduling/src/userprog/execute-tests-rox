@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+TESTS="rox-simple rox-child rox-multichild"
+
+bash ../execute-tests "userprog" "$TESTS"

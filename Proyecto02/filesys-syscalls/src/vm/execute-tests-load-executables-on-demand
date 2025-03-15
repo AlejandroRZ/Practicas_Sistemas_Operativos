@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+TESTS_ARGUMENT_PASSING="args-none args-single args-multiple args-many args-dbl-space"
+
+TESTS_EXIT="exit"
+TESTS_EXEC="exec-once exec-arg exec-missing exec-multiple exec-bound"
+TESTS_WAIT="wait-simple wait-twice wait-bad-pid"
+TESTS_ROBUSTNESS="multi-recurse"
+
+TESTS_SYSCALLS_PROCESSES="$TESTS_EXIT $TESTS_EXEC $TESTS_WAIT $TESTS_ROBUSTNESS"
+
+
+TESTS_CREATE="create-normal create-empty create-exists create-long create-bound"
+TESTS_OPEN="open-normal open-missing open-twice open-empty open-boundary"
+TESTS_READ="read-normal read-zero read-bad-fd read-stdout read-boundary"
+TESTS_WRITE="write-normal write-zero write-bad-fd write-stdin write-boundary"
+TESTS_CLOSE="close-normal close-stdin close-stdout close-bad-fd close-twice"
+TESTS_ROBUSTNESS="multi-child-fd"
+
+TESTS_SYSCALLS_FILESYS_FUNCTIONAL="$TESTS_CREATE $TESTS_OPEN $TESTS_READ $TESTS_WRITE $TESTS_CLOSE"
+TESTS_SYSCALLS_FILESYS="$TESTS_SYSCALLS_FILESYS_FUNCTIONAL $TESTS_ROBUSTNESS"
+
+TESTS_SC="sc-bad-sp sc-bad-arg sc-boundary sc-boundary-2 sc-boundary-3"
+TESTS_BAD="bad-read bad-write bad-read2 bad-write2 bad-jump bad-jump2"
+TESTS_SYSCALLS="create-bad-ptr open-null open-bad-ptr create-null read-bad-ptr write-bad-ptr exec-bound-2 exec-bound-3 exec-bad-ptr wait-killed"
+
+TESTS_INVALID_MEMORY_ACCESS="$TESTS_SC $TESTS_BAD $TESTS_SYSCALLS"
+
+TESTS="$TESTS_ARGUMENT_PASSING $TESTS_SYSCALLS_PROCESSES $TESTS_SYSCALLS_FILESYS $TESTS_INVALID_MEMORY_ACCESS"
+
+TESTS_USERPROG=""
+for test_name in $TESTS; do
+  TESTS_USERPROG="${TESTS_USERPROG} userprog/${test_name}"
+done
+
+TESTS_FILESYS_SMALL_FILES="sm-create sm-full sm-random sm-seq-block sm-seq-random"
+TESTS_FILESYS_LARGE_FILES="lg-create lg-full lg-random lg-seq-block lg-seq-random"
+TESTS_FILESYS_MULTI_PROGRAM="syn-read syn-write syn-remove"
+
+TESTS_FILESYS_="$TESTS_FILESYS_SMALL_FILES $TESTS_FILESYS_LARGE_FILES $TESTS_FILESYS_MULTI_PROGRAM"
+
+TESTS_FILESYS=""
+for test_name in $TESTS_FILESYS_; do
+  TESTS_FILESYS="${TESTS_FILESYS} filesys/base/${test_name}"
+done
+
+bash ../execute-tests "" "$TESTS_USERPROG $TESTS_FILESYS"

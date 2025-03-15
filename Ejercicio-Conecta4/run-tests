@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+
+runTests() {
+    local TEST_SUITE=$1
+    local TESTS=$2
+    local PRINT_OUTPUT=$3
+    local PASS_TESTS=0
+    for TEST_NAME in $TESTS
+    do
+        local TEST_FILE="$TEST_SUITE-test-$TEST_NAME"
+        ./practica01 $TEST_SUITE $TEST_NAME > outputs/$TEST_FILE.output
+        local DIFF=$(diff expected-outputs/$TEST_FILE.output outputs/$TEST_FILE.output)
+
+        if [ -z "$DIFF" ]
+        then
+            PASS_TESTS=$(($PASS_TESTS + 1))
+            if [ "$PRINT_OUTPUT" ]; then 
+                echo "Prueba $TEST_SUITE $TEST_NAME: PASS"
+            fi
+        else
+            if [ "$PRINT_OUTPUT" ]; then 
+                echo "Prueba $TEST_SUITE $TEST_NAME: FAIL"
+                echo "$DIFF"
+            fi
+        fi
+    done
+    if [  -z "$PRINT_OUTPUT" ]; then
+        echo "$PASS_TESTS"
+    fi
+}
+
+ERRORS=""
+PASSED_TESTS=0
+TOTAL_TESTS=0
+
+## TO_STRING TESTS
+TO_STRING="to_string"
+TO_STRING_TESTS="empty_board nonempty_board"
+TO_STRING_TOTAL_TESTS=$(echo "$TO_STRING_TESTS" | wc -w)
+TO_STRING_PASSED_TESTS=$(runTests $TO_STRING "$TO_STRING_TESTS")
+
+PASSED_TESTS=$(($PASSED_TESTS + $TO_STRING_PASSED_TESTS))
+TOTAL_TESTS=$(($TOTAL_TESTS + $TO_STRING_TOTAL_TESTS))
+
+# output test details
+runTests $TO_STRING "$TO_STRING_TESTS" "print_test_output"
+
+
+## MAKE_PLAY TESTS
+MAKE_PLAY="make_play"
+MAKE_PLAY_TESTS="single_play multiple_plays full_column invalid_column invalid_player"
+MAKE_PLAY_TOTAL_TESTS=$(echo "$MAKE_PLAY_TESTS" | wc -w)
+MAKE_PLAY_PASSED_TESTS=$(runTests $MAKE_PLAY "$MAKE_PLAY_TESTS")
+
+PASSED_TESTS=$(($PASSED_TESTS + $MAKE_PLAY_PASSED_TESTS))
+TOTAL_TESTS=$(($TOTAL_TESTS + $MAKE_PLAY_TOTAL_TESTS))
+
+# output test details
+runTests $MAKE_PLAY "$MAKE_PLAY_TESTS" "print_test_output"
+
+
+## MAKE_PLAY TESTS
+PLAYER_WON="player_won"
+PLAYER_WON_HORIZONTAL_TESTS="horizontal_no_win_from_last_position horizontal_no_win_from_first_position horizontal_no_win_from_inner_position horizontal_win_edge_from_last_position horizontal_win_edge_from_first_position horizontal_win_edge_from_inner_position horizontal_win_in_first_row horizontal_win_in_inner_row horizontal_win_in_last_row"
+PLAYER_WON_VERTITAL_TESTS="vertical_win vertical_no_win"
+PLAYER_WON_DOWNWARDS_DIAGONAL_TESTS="downwards_diagonal_win downwards_diagonal_no_win"
+PLAYER_WON_UPWARDS_DIAGONAL_TESTS="upwards_diagonal_win upwards_diagonal_no_win"
+PLAYER_WON_TESTS="$PLAYER_WON_HORIZONTAL_TESTS $PLAYER_WON_VERTITAL_TESTS $PLAYER_WON_DOWNWARDS_DIAGONAL_TESTS $PLAYER_WON_UPWARDS_DIAGONAL_TESTS"
+PLAYER_WON_TOTAL_TESTS=$(echo "$PLAYER_WON_TESTS" | wc -w)
+PLAYER_WON_PASSED_TESTS=$(runTests $PLAYER_WON "$PLAYER_WON_TESTS")
+
+PASSED_TESTS=$(($PASSED_TESTS + $PLAYER_WON_PASSED_TESTS))
+TOTAL_TESTS=$(($TOTAL_TESTS + $PLAYER_WON_TOTAL_TESTS))
+
+# output test details
+runTests $PLAYER_WON "$PLAYER_WON_TESTS" "print_test_output"
+
+
+echo "SUMMARY $PASSED_TESTS/$TOTAL_TESTS PASS"
+
+if [ "$PASSED_TESTS" != "$TOTAL_TESTS" ] ;  then
+    echo "TESTS FAILED"
+    exit -1
+    
+else
+    echo "TESTS SUCCEDED"
+    exit 0
+fi

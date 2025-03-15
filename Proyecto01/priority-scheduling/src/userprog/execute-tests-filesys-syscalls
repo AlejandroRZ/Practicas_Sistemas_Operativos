@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+TESTS_CREATE="create-normal create-empty create-exists create-long create-bound"
+TESTS_OPEN="open-normal open-missing open-twice open-empty open-boundary"
+TESTS_READ="read-normal read-zero read-bad-fd read-stdout read-boundary"
+TESTS_WRITE="write-normal write-zero write-bad-fd write-stdin write-boundary"
+TESTS_CLOSE="close-normal close-stdin close-stdout close-bad-fd close-twice"
+TESTS_ROBUSTNESS="multi-child-fd"
+
+TESTS_SYSCALLS_FILESYS_FUNCTIONAL="$TESTS_CREATE $TESTS_OPEN $TESTS_READ $TESTS_WRITE $TESTS_CLOSE"
+TESTS_SYSCALLS_FILESYS="$TESTS_SYSCALLS_FILESYS_FUNCTIONAL $TESTS_ROBUSTNESS"
+
+bash ../execute-tests "userprog" "$TESTS_SYSCALLS_FILESYS"
